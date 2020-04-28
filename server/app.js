@@ -1,7 +1,12 @@
 //Importaciones
 require('./config/config') // se ejecuta y mantiene las variables como globales
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require('express')  //Permite administrar un servidor en un puerto
+const bodyParser = require('body-parser')   // permite obtener datos a partir del url
+const mongoose = require('mongoose')    //Permite administrar la base de datos MongoDB
+
+//Evitar errores de mongooseDB https://mongoosejs.com/docs/deprecations.html
+mongoose.set('useCreateIndex', true)
+mongoose.set('useFindAndModify', false)
 
 
 //iniciando el express
@@ -11,46 +16,19 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.use( require('./routes/daoUsuario') )
 
-//Tipos de consultas a servidor
-app.get('/', function ( req, res ) {
-    res.json('Home o pantalla principal')
-} )
-app.get('/usuario', function ( req, res ) {
-    res.json('get de ususarios')
-} )
-
-//******************Tipos de consultas**********************
-
-// POST: permite obtener parametros mandados desde body
-app.post('/usuario', function ( req, res ) {
-    let body = req.body     //obteniendo data body
-    if( body.nome ===undefined ){
-        res.status(400).json({
-            ok: false,
-            mensaje: 'Se requiere el parametro "name"'
-        })
-    }else{
-        res.json({
-            persona: body
-        })
+//permite connectarse a mongodb
+mongoose.connect(
+    process.env.URLDB, //variable delarchivo config.js
+    { useNewUrlParser: true,useUnifiedTopology: true },
+    ( err, res ) => {
+        if(err) throw err
+        console.log(`Se ha conectado la Base de datos`);
     }
-} )
+)
 
-//PUT: este permite usar como dato el parametro del url
-app.put('/usuario/:id', function ( req, res ) {
-    let id = req.params.id      //asignando parametro como dato
-    res.json({
-        id
-    })
-} )
-
-//DELETE
-app.delete('/usuario', function ( req, res ) {
-    res.json('delete de ususario')
-} )
-
-//LISTEN
+//Asignación y detalle del puerto usado 
 app.listen(process.env.PORT, () => {
     console.log('Escuchando el puerto 3000');
 })
