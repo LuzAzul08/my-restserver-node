@@ -13,7 +13,7 @@ console.log(process.env.NODE_ENV);
 if( process.env.NODE_ENV === 'dev' ){
     urlDB = 'mongodb://localhost:27017/store'
 }else {
-    urlDB = 'mongodb+srv://hds:q69WAhbLTqzLZs86@cluster0-z6sbo.mongodb.net/store'
+    urlDB = process.env.MONGO_ATLAS_URL
 }
 
 process.env.URLDB = urlDB
