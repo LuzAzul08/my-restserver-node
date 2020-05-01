@@ -1,9 +1,7 @@
 //IMPORTACIONES
-const mongoose = require('mongoose') //Permite administrar la base de datos MongoDB
+const { Schema, model } = require('mongoose')
+const bcryptjs = require('bcryptjs')
 const uniqueValidator = require('mongoose-unique-validator') //Permite manejar amigablemente las advertencias
-
-//Inicializando el esquema del objetos
-let Schema = mongoose.Schema
 
 //definiendo roles validos admitidos
 let rolesValidos = {
@@ -11,7 +9,7 @@ let rolesValidos = {
     message: '{VALUE} no es un rol admitido'
 }
 
-//Definiendo el Objeto contenedor de Usuario
+//Esquema
 let usuarioSchema = new Schema({
     name: {
         type: String,
@@ -46,7 +44,7 @@ let usuarioSchema = new Schema({
     }
 })
 
-//detitar la impresion de ususario en un JSON 
+//Eliminar propiedad password de la impresion json
 usuarioSchema.methods.toJSON = function() {
     let user = this
     let userObject = user.toObject()
@@ -54,8 +52,21 @@ usuarioSchema.methods.toJSON = function() {
     return userObject
 }
 
+//funcion de encriptado de password
+usuarioSchema.methods.encryptPassword = async ( password ) => {
+    const salt = await bcryptjs.genSalt( 10 )
+    return await bcryptjs.hash( password,salt )
+}
+
+//desencriptado de password
+usuarioSchema.methods.matchPassword = async function( password ){
+    return await bcryptjs.compare( password, this.password)
+}
+
 //definiendo el mensaje de error al reportar usuarios repetidos(correo)
 usuarioSchema.plugin( uniqueValidator, { message: '{PATH} debe ser único' } )
 
+
+
 //EXPORTACIÓN
-module.exports = mongoose.model( 'Usuario' , usuarioSchema )
+module.exports = model( 'Usuario' , usuarioSchema )

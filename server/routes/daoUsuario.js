@@ -21,10 +21,10 @@ app.get('/usuario', function ( req, res ) {
     let limite = req.query.limite || 5
     limite = Number(limite)
 
-    Usuario.find({ estado: true }, 'name email role estado google img') //se puede poner filtros y numero de columnas a mostrar
+    Usuario.find({ estado: true }, 'name email role estado google img') //find busca todos los datos y se puede ({poner filtros} y numero de columnas a mostrar)
         .skip(desde)    //Inicio de datos a mostrar
         .limit(limite)   //limita solo 5 datos a mostrar
-        .exec( (err,usuarios) =>{
+        .exec( (err,usuarios) =>{   //Ojo se puede poner el callback dento del exe(**) o fuera exe().then(**) 
 
             if(err){
                 return res.status(400).json({
