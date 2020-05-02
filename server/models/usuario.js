@@ -53,14 +53,14 @@ usuarioSchema.methods.toJSON = function() {
 }
 
 //funcion de encriptado de password
-usuarioSchema.methods.encryptPassword = async ( password ) => {
-    const salt = await bcryptjs.genSalt( 10 )
-    return await bcryptjs.hash( password,salt )
+usuarioSchema.methods.encryptPassword = ( password ) => {
+    const salt = bcryptjs.genSaltSync( 10 )
+    return bcryptjs.hashSync( password,salt )
 }
 
 //desencriptado de password
-usuarioSchema.methods.matchPassword = async function( password ){
-    return await bcryptjs.compare( password, this.password)
+usuarioSchema.methods.matchPassword =  function( password ){
+    return bcryptjs.compareSync( password, this.password)
 }
 
 //definiendo el mensaje de error al reportar usuarios repetidos(correo)

@@ -4,7 +4,8 @@ const express = require('express')  //Permite administrar un servidor en un puer
 const bodyParser = require('body-parser')   // permite obtener datos a partir del url
 const Usuario = require('../models/usuario')    //importa el esquema del modelo Usuario
 //const bcrypt = require('bcrypt')    //Permite encriptar la contraseña hash, disponible paara version LTS node
-const _ = require('underscore')
+const _ = require('underscore') //Permite fultar las columnas a mostrar
+const { vToken, verificaAdmRol } = require('../middlewares/autentificacion')
 
 //iniciando el express 
 const app = express()
@@ -13,7 +14,7 @@ const app = express()
 //******************TIPOS DE LLAMADOS**********************
 
 //GET: consulta standar para traer datos de la base de datos
-app.get('/usuario', function ( req, res ) {
+app.get('/usuario', vToken, ( req, res ) => {
     
     let desde = req.query.desde || 0
     desde = Number(desde)
@@ -44,7 +45,7 @@ app.get('/usuario', function ( req, res ) {
 } )
 
 // POST: Permite mandar/ingresar datos desde el body
-app.post('/usuario', function ( req, res ) {
+app.post('/usuario', [vToken, verificaAdmRol], function ( req, res ) {
     let body = req.body     //obteniendo data body
 
     let usuario = new Usuario({
@@ -54,6 +55,8 @@ app.post('/usuario', function ( req, res ) {
         password: body.password,
         role: body.role,
     })
+
+    usuario.password = usuario.encryptPassword(body.password),
 
     usuario.save( (err, usuarioDB) => { //comando de guardado en mongodb
 
@@ -74,7 +77,7 @@ app.post('/usuario', function ( req, res ) {
 } )
 
 //PUT: Edita los datos con los valores de los parametro enviados del url
-app.put('/usuario/:id', function ( req, res ) {
+app.put('/usuario/:id', [vToken, verificaAdmRol], function ( req, res ) {
     let id = req.params.id      //asignando parametro como dato
     let body = _.pick( req.body, ['name', 'email', 'img', 'role', 'estado'] ) //aplica la fltracion de parametro body
 
@@ -130,7 +133,7 @@ app.put('/usuario/:id', function ( req, res ) {
 } )*/
 
 //PUT-DELETE: Usa modificar estado para desactivar usuario
-app.delete('/usuario/:id', function ( req, res ) {
+app.delete('/usuario/:id', vToken, function ( req, res ) {
     let id = req.params.id      //asignando parametro como dato
 
     let nuevoEstado = {
