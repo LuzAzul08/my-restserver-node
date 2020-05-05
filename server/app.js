@@ -3,6 +3,7 @@ require('./config/config')
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+const path = require('path')
 
 //Evitar errores de mongooseDB https://mongoosejs.com/docs/deprecations.html
 mongoose.set('useCreateIndex', true)
@@ -15,6 +16,10 @@ const app = express()
 // funciones activadas al realizar una peticion
 app.use(bodyParser.urlencoded({ extended: false })) //false: no permite manejar objetos anidados
 app.use(bodyParser.json()) // activa usar body-parser
+
+
+//HABILITAR LA CCARPETA PUBLIC
+app.use( express.static( path.resolve( __dirname, '../public')) )
 
 
 //Configuración global de rutas

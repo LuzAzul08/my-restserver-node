@@ -83,7 +83,7 @@ app.put('/usuario/:id', [vToken, verificaAdmRol], function ( req, res ) {
 
     Usuario.findByIdAndUpdate( id, body, { new: true, runValidators: true }, (err, usuarioDB) => { // permite actualizar datos de  mongo y json(impresion)
         //nota: {new: true} permite que usuarioDB sea el nuevo objeto modificado y no el antiguo
-        //{runValidators} permite aplicar las restricciones del screma en el update
+        //{runValidators: true} permite aplicar las restricciones del screma en el update
 
         if(err){
             return res.status(400).json({

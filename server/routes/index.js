@@ -6,5 +6,7 @@ const app = express()
 
 app.use( require('./daoUsuario') )
 app.use( require('./login') )
+app.use( require('./daoCategoria') )
+app.use( require('./daoProducto') )
 
 module.exports = app
