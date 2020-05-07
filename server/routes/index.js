@@ -8,5 +8,7 @@ app.use( require('./daoUsuario') )
 app.use( require('./login') )
 app.use( require('./daoCategoria') )
 app.use( require('./daoProducto') )
+app.use( require('./upload') )
+app.use( require('./imagenes') )
 
 module.exports = app

@@ -101,8 +101,6 @@ app.post( '/google', async (req, res) => {
                 err
             })
         }
-        console.log('ESTE ES EL EMAIL');
-        console.log(usuarioDB.email);
         if(usuarioDB){
             if( usuarioDB.google === false ){
                 return res.status(400).json({
