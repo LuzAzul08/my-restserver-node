@@ -7,8 +7,7 @@ let app = express()
 
 //Categoria
 let Categoria = require('../models/categoria')
-// MI cambio  nuevo
-// nuevo cambio
+// CAmbios compa;ero 2
 //**********ACCIONES***********
 
 //GET: Mostrar todas la categorias
